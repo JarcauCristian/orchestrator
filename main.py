@@ -1,12 +1,5 @@
-from loaders.postgres_loader import PostgresLoader
+from api_helper.pipeline import Pipeline
+from loaders.csv_loader import CSVLoader
 
 if __name__ == '__main__':
-    postgres = PostgresLoader(
-        db_name="keycloak",
-        user="keycloak",
-        password="PS?R&aGN4F&BgQ@8",
-        host="localhost",
-    )
-
-    postgres.load("client", "A dataset about clients")
-    print(postgres.save_data())
+    pipeline = Pipeline(("csv_loader", CSVLoader()))

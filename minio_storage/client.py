@@ -15,11 +15,18 @@ class Client:
         self._allowed_status_codes = [code for code in range(200, 300)]
         self._http = urllib3.PoolManager()
 
-    def send_request(self, endpoint: str, method: str, body: dict[Any, Any] = dict, headers: dict[Any, Any] = dict) \
-            -> str:
+    def send_request(self, endpoint: str, method: str, query_params: dict[Any, Any] = dict, body: dict[Any, Any] = dict,
+                     headers: dict[Any, Any] = dict) -> str:
         url = f'{self._api}/{endpoint}'
+        if len(query_params) > 0:
+            url += '?'
+            for k, v in query_params.items():
+                url += f'{k}={v}'
         if method.upper() in self._allowed_methods:
-            response = requests.request(method.upper(), url, data=json.dumps(body), headers=headers)
+            if len(body) > 0:
+                response = requests.request(method.upper(), url, data=json.dumps(body), headers=headers)
+            else:
+                response = requests.request(method.upper(), url, headers=headers)
 
             if response.status_code in self._allowed_status_codes:
                 return response.content.decode('utf-8')
@@ -31,9 +38,14 @@ class Client:
     def send_urllib3_request(self,
                              endpoint: str,
                              method: str,
+                             query_params: dict[Any, Any] = dict,
                              fields: dict[Any, Any] = dict,
                              headers: dict[Any, Any] = dict) -> str | None:
         url = f'{self._api}/{endpoint}'
+        if len(query_params) > 0:
+            url += '?'
+            for k, v in query_params.items():
+                url += f'{k}={v}'
         if method.upper() in self._allowed_methods:
             if len(fields) > 0:
                 if len(headers) > 0:
@@ -47,7 +59,7 @@ class Client:
                     r = self._http.request(method, url)
 
             if r.status in self._allowed_status_codes:
-                return r.data
+                return r.data.decode('utf-8')
             else:
                 raise TypeError(f"Value of status_code {r.status} is not in {self._allowed_status_codes}")
         else:

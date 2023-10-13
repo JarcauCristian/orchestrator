@@ -7,20 +7,16 @@ import pandas as pd
 
 class CSVLoader:
 
-    def __init__(self, csv_path: str):
-        self.url = csv_path.split("\\")[0]
-        self.path = '/'.join(csv_path.split("\\")[1:])
+    def __init__(self, path: str):
+        self.path = path
         self._endpoint = 'get_object'
         self._ctx = Client()
 
     def load(self) -> pd.DataFrame:
-        body = {
-            "url": self.url,
-            "dataset_path": self.path
-        }
-
         try:
-            response = self._ctx.send_request(endpoint=self._endpoint, method="POST", body=body)
+            response = self._ctx.send_request(endpoint=self._endpoint,
+                                              method="GET",
+                                              query_params={'dataset_path': self.path})
 
             response_url = json.loads(response)["url"]
             try:

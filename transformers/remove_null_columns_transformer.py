@@ -9,11 +9,11 @@ class RemoveNullColumns:
         self._null_values = [*generate_case_combinations("Null"), *generate_case_combinations("Nan"),
                              *generate_case_combinations("Na"), 0, 0.0]
 
-    def execute(self, columns: list[str] = list, threshold: float = 0.7) -> pd.DataFrame:
+    def execute(self, columns: list[str] = None, threshold: float = 0.7) -> pd.DataFrame:
         if threshold < 0 or threshold > 1:
             raise ValueError("The value of the threshold should be between 0 and 1.")
 
-        if len(columns) > 0:
+        if columns is not None:
             for column in columns:
                 if (self.df[column].isin(self._null_values).sum() / len(self.df[column])) > threshold:
                     self.df = self.df.drop(column, axis=1)

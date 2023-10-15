@@ -14,7 +14,7 @@ class CSVExporter:
         self._endpoint = 'put_object'
         self._ctx = Client()
 
-    def export(self, dataset_name: str, tags: dict[Any, Any] = dict) -> str | None:
+    def execute(self, dataset_name: str, tags: dict[Any, Any] = dict) -> str | None:
         self.df.to_csv(self._file)
         body = {
             "file": self._file.getvalue(),

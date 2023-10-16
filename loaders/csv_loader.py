@@ -31,6 +31,6 @@ class CSVLoader:
 
         except TypeError as e:
             print(f"An error occurred: {e}")
-            return pd.DataFrame()
 
-    def get_statist
+    def get_statistics(self) -> pd.DataFrame:
+        return self._df.describe()

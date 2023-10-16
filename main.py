@@ -21,9 +21,11 @@ async def root():
     return JSONResponse(status_code=200, content="Hello From the Pipeline API!")
 
 
-@app.get('/get_')
-async def get_():
-    csv_loader = CSVLoader()
+@app.get('/get_statistics')
+async def get_statistics(dataset_path: str):
+    csv_loader = CSVLoader(path=dataset_path)
+    csv_loader.execute()
+    return csv_loader.get_statistics()
 
 
 if __name__ == '__main__':

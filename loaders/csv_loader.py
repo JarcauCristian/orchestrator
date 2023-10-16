@@ -1,4 +1,6 @@
 import json
+from typing import Dict, Any
+
 import requests
 import io
 from minio_storage.client import Client
@@ -13,11 +15,12 @@ class CSVLoader:
         self._ctx = Client()
         self._df = pd.DataFrame()
 
-    def execute(self) -> None:
+    def execute(self, token: str) -> None:
         try:
             response = self._ctx.send_request(endpoint=self._endpoint,
                                               method="GET",
-                                              query_params={'dataset_path': self.path})
+                                              query_params={'dataset_path': self.path},
+                                              headers={'Authorization': f'Bearer {token}'})
             response_url = json.loads(response.content.decode('utf-8'))["url"]
             try:
                 response = requests.get(response_url)
@@ -32,5 +35,8 @@ class CSVLoader:
         except TypeError as e:
             print(f"An error occurred: {e}")
 
-    def get_statistics(self) -> pd.DataFrame:
-        return self._df.describe()
+    def get_statistics(self) -> Dict[str, Any]:
+        columns = list(self._df.describe().columns)
+
+        return {"columns_dataset": columns,
+                "df": self._df.describe().T.to_dict(orient='record')}

@@ -14,6 +14,9 @@ class Pipeline:
     def __len__(self):
         return len(self.steps)
 
+    def append(self, step: tuple[Any, Any]):
+        self.steps.append(step)
+
     def __next__(self):
         return self.next()
 

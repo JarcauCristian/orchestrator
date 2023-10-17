@@ -35,5 +35,10 @@ async def get_statistics(dataset_path: str, req: Request):
     return JSONResponse(status_code=200, content=csv_loader.get_statistics())
 
 
+@app.post('/create_pipeline')
+async def create_pipeline():
+    pass
+
+
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=8000)

@@ -1,6 +1,5 @@
 import json
 from typing import Dict, Any
-
 import requests
 import io
 from minio_storage.client import Client
@@ -9,11 +8,18 @@ import pandas as pd
 
 class CSVLoader:
 
-    def __init__(self, path: str):
+    def __init__(self, path: str = ""):
         self.path = path
         self._endpoint = 'get_object'
         self._ctx = Client()
         self._df = pd.DataFrame()
+
+    def set_params(self, path) -> None:
+        self.path = path
+
+    @property
+    def init_params(self):
+        return ["path"]
 
     def execute(self, token: str) -> None:
         try:

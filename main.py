@@ -58,16 +58,24 @@ async def get_exporters_params():
 @app.post('/create_pipeline')
 async def create_pipeline(pipeline: PipelineModel):
 
-    for step in pipeline.steps
-        if 'name' not in step.keys():
-            pass
+    for step in pipeline.steps:
+        if 'name' not in step.keys() or 'params' not in step.keys():
+            return JSONResponse(status_code=400, content="Please provide the Name and Params for every step!")
 
     steps = []
+    errors = 0
     for step in pipeline.steps:
-        obj = create_pipeline_object(step)
-        steps.append((step['name']))
+        try:
+            obj = create_pipeline_object(step)
+            steps.append((step['name'], obj))
+        except ImportError:
+            errors += 1
 
+    if errors > 0:
+        return JSONResponse(status_code=500, content="Could not create all the steps that were provided!")
 
+    pipelines.append(Pipeline(steps))
+    return JSONResponse(status_code=200, content="Pipeline created successfully!")l
 
 if __name__ == '__main__':
     # uvicorn.run(app, host='0.0.0.0', port=8000)

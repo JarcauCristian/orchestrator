@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
 from api_helper.api_models import PipelineModel
 from api_helper.pipeline import Pipeline
-from api_helper.pipeline_utils import get_loaders_with_params, get_transformers_with_params, get_exporters_with_params, \
+from api_helper.pipeline_utils import get_loaders_with_params, get_transformers_with_params, get_exporters_with_params,\
     create_pipeline_object
 from loaders.csv_loader import CSVLoader
 
@@ -75,7 +75,7 @@ async def create_pipeline(pipeline: PipelineModel):
         return JSONResponse(status_code=500, content="Could not create all the steps that were provided!")
 
     pipelines.append(Pipeline(steps))
-    return JSONResponse(status_code=200, content="Pipeline created successfully!")l
+    return JSONResponse(status_code=200, content="Pipeline created successfully!")
 
 if __name__ == '__main__':
     # uvicorn.run(app, host='0.0.0.0', port=8000)
